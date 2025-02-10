@@ -48,90 +48,84 @@ export default function Next() {
   }
 
   return (
-    <ThemedView style={styles.view} colorName="nextBackground">
-      <ThemedView style={styles.headerOuter}>
-        <ThemedView style={styles.headerInner} colorName="nextHeader">
+    <ThemedView style={styles.view}>
+      <ThemedView style={[{ borderColor: iconBackground }, styles.content]}>
+        <ThemedView style={styles.header} colorName="nextHeader">
           <ThemedText>NEXT PERIOD: Tue Sept 26 2022</ThemedText>
         </ThemedView>
-      </ThemedView>
-      <ThemedView style={styles.content} colorName="nextBackground">
-        <ThemedView style={styles.textOuter}>
-          <ThemedView style={styles.textInner} colorName="nextBackground">
-            <View style={styles.textNumberContainer}>
-              <ThemedText style={styles.textNumber}>7</ThemedText>
-              <View style={styles.textNumberTextContainer}>
-                <ThemedText style={styles.textNumberText}>Days</ThemedText>
-                <ThemedText style={styles.textNumberText}>Away</ThemedText>
-              </View>
+        <ThemedView style={styles.text} colorName="nextBackground">
+          <View style={styles.textNumberContainer}>
+            <ThemedText style={styles.textNumber}>7</ThemedText>
+            <View style={styles.textNumberTextContainer}>
+              <ThemedText style={styles.textNumberText}>Days</ThemedText>
+              <ThemedText style={styles.textNumberText}>Away</ThemedText>
             </View>
-            <ThemedText>Duration: 6 days</ThemedText>
-          </ThemedView>
-        </ThemedView>
-        <ThemedView style={styles.buttonOuter}>
-          <Link
-            asChild
-            href="/modal"
-            style={[
-              { borderColor: iconColor, backgroundColor: iconBackground },
-              styles.buttonInner,
-            ]}
-          >
-            <Pressable
-              onPressIn={handlePressIn}
-              onPressOut={handlePressOut}
-              android_ripple={{
-                color: "rgba(255,255,255,0.3)",
-                borderless: false,
-              }}
-            >
-              <View>
-                {Platform.OS === "ios" && (
-                  <Animated.View style={[styles.ripple, animatedStyle]} />
-                )}
-                <View>
-                  <IconSymbol name="add" size={96} color={iconColor} />
-                </View>
-              </View>
-            </Pressable>
-          </Link>
+          </View>
         </ThemedView>
       </ThemedView>
+
+      <Link
+        asChild
+        href="/modal"
+        style={[
+          { borderColor: iconColor, backgroundColor: iconBackground },
+          styles.button,
+        ]}
+      >
+        <Pressable
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          android_ripple={{
+            color: "rgba(255,255,255,0.3)",
+            borderless: false,
+          }}
+        >
+          <View>
+            {Platform.OS === "ios" && (
+              <Animated.View style={[styles.ripple, animatedStyle]} />
+            )}
+            <View>
+              <IconSymbol name="add" size={96} color={iconColor} />
+            </View>
+          </View>
+        </Pressable>
+      </Link>
     </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  view: { height: 148, flex: 1, borderRadius: 4, overflow: "hidden" },
-  headerOuter: {
-    height: 44,
+  view: {
+    flex: 1,
+    flexDirection: "row",
   },
-  headerInner: {
+  content: {
+    flex: 1,
+    overflow: "hidden",
+    borderRadius: 8,
+    borderWidth: 1,
+    marginRight: 8,
+  },
+
+  header: {
     display: "flex",
-    height: 44,
-    borderBottomRightRadius: 4,
+    height: 36,
     overflow: "hidden",
     justifyContent: "center",
     paddingLeft: 8,
   },
-  content: {
-    height: 104,
-    flexDirection: "row",
-  },
-  textOuter: { flex: 1 },
-  textInner: {
+  text: {
     flex: 1,
     paddingLeft: 8,
-    paddingBottom: 8,
-    borderBottomRightRadius: 4,
-    borderBottomLeftRadius: 4,
+    marginTop: -8,
     overflow: "hidden",
     flexDirection: "column",
   },
+
   textNumberContainer: {
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
   },
   textNumber: {
     alignItems: "center",
@@ -147,15 +141,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 16 * 1.3,
   },
-  buttonOuter: {
-    width: 104,
-    height: 104,
-    padding: 8,
-    borderTopLeftRadius: 16,
-    overflow: "hidden",
-    position: "relative",
-  },
-  buttonInner: {
+
+  button: {
     width: 96,
     height: 96,
     display: "flex",
@@ -167,8 +154,8 @@ const styles = StyleSheet.create({
   },
   ripple: {
     position: "absolute",
-    width: 100,
-    height: 100,
+    width: 96,
+    height: 96,
     backgroundColor: "white",
     borderRadius: 50,
   },

@@ -15,6 +15,7 @@ const MAPPING = {
   "chevron.right": "chevron-right",
   add: "add",
   calendar: "calendar-month",
+  file: "file-copy",
 } as Partial<
   Record<
     import("expo-symbols").SymbolViewProps["name"],

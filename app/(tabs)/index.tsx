@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
 import Constants from "expo-constants";
-import Next from "@/components/Nextv2";
+import Next from "@/components/Next";
 import Recent from "@/components/Recent";
 import Summary from "@/components/Summary";
 import Chart from "@/components/Chart";
@@ -89,9 +89,5 @@ const styles = StyleSheet.create({
   },
   spacer: {
     flex: 1,
-  },
-  footer: {
-    height: Constants.statusBarHeight,
-    width: "100%",
   },
 });

@@ -5,18 +5,10 @@ import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
-  const iconColor = useThemeColor(
-    { light: undefined, dark: undefined },
-    "tabIconSelected",
-  );
   const backgroundColor = useThemeColor(
     { light: undefined, dark: undefined },
     "tabBarBackground",
@@ -25,7 +17,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "red", // Colors[colorScheme ?? "light"].tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -42,16 +34,49 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarLabel: () => {
+          tabBarLabel: ({ focused }) => {
+            const colorName = focused ? "tabIconSelected" : "tabIconDefault";
             return (
-              <ThemedText colorName="tabIconSelected" type="xs">
+              <ThemedText colorName={colorName} type="xs">
                 Home
               </ThemedText>
             );
           },
-          tabBarIcon: () => (
-            <IconSymbol size={28} name="house.fill" color={iconColor} />
-          ),
+          tabBarIcon: ({ focused }) => {
+            const iconColor = useThemeColor(
+              { light: undefined, dark: undefined },
+              focused ? "tabIconSelected" : "tabIconDefault",
+            );
+
+            return <IconSymbol size={28} name="house.fill" color={iconColor} />;
+          },
+          tabBarStyle: {
+            backgroundColor,
+            borderTopWidth: 1,
+            borderColor: backgroundColor,
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="DataManagement"
+        options={{
+          title: "Data Management",
+          tabBarLabel: ({ focused }) => {
+            const colorName = focused ? "tabIconSelected" : "tabIconDefault";
+            return (
+              <ThemedText colorName={colorName} type="xs">
+                Data
+              </ThemedText>
+            );
+          },
+          tabBarIcon: ({ focused }) => {
+            const iconColor = useThemeColor(
+              { light: undefined, dark: undefined },
+              focused ? "tabIconSelected" : "tabIconDefault",
+            );
+
+            return <IconSymbol size={24} name="file" color={iconColor} />;
+          },
           tabBarStyle: {
             backgroundColor,
             borderTopWidth: 1,
