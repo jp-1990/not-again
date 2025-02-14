@@ -1,5 +1,11 @@
 import React, { PropsWithChildren } from "react";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import {
+  GestureResponderEvent,
+  Platform,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
 import Animated, {
   Easing,
   useSharedValue,
@@ -8,16 +14,23 @@ import Animated, {
   runOnJS,
 } from "react-native-reanimated";
 
-export default function Button({
-  onPress,
-  buttonStyle,
-  rippleStyle,
-  children,
-}: {
-  onPress: () => void;
-  buttonStyle?: Record<string, any> | Record<string, any>[];
-  rippleStyle?: Record<string, any> | Record<string, any>[];
-} & PropsWithChildren) {
+export default React.forwardRef(function Button(
+  {
+    onPress,
+    onPressIn,
+    onPressOut,
+    buttonStyle,
+    rippleStyle,
+    children,
+  }: {
+    onPress?: (e?: GestureResponderEvent) => void;
+    onPressIn?: (e?: GestureResponderEvent) => void;
+    onPressOut?: (e?: GestureResponderEvent) => void;
+    buttonStyle?: Record<string, any> | Record<string, any>[];
+    rippleStyle?: Record<string, any> | Record<string, any>[];
+  } & PropsWithChildren,
+  _ref,
+) {
   const rippleScale = useSharedValue(1);
   const [rippleVisible, setRippleVisible] = React.useState(false);
 
@@ -32,6 +45,7 @@ export default function Button({
       duration: 300,
       easing: Easing.out(Easing.ease),
     });
+    onPressIn && onPressIn();
   }
 
   function handlePressOut() {
@@ -40,6 +54,7 @@ export default function Button({
       { duration: 300, easing: Easing.in(Easing.ease) },
       () => runOnJS(setRippleVisible)(false),
     );
+    onPressOut && onPressOut();
   }
 
   return (
@@ -70,7 +85,7 @@ export default function Button({
       </View>
     </Pressable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   button: {

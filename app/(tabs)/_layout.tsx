@@ -7,8 +7,10 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { ThemedText } from "@/components/ThemedText";
+import { Colors } from "@/constants/Colors";
 
 export default function TabLayout() {
+  const tint = useThemeColor({ light: undefined, dark: undefined }, "tint");
   const backgroundColor = useThemeColor(
     { light: undefined, dark: undefined },
     "tabBarBackground",
@@ -17,7 +19,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "red", // Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: tint,
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -58,9 +60,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="DataManagement"
+        name="Data"
         options={{
-          title: "Data Management",
+          title: "Data",
           tabBarLabel: ({ focused }) => {
             const colorName = focused ? "tabIconSelected" : "tabIconDefault";
             return (

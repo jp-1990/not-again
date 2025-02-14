@@ -47,9 +47,19 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
           <Stack.Screen
-            name="modal"
+            name="AddData"
             options={{
               title: "Add a Date",
+              presentation: "transparentModal",
+              headerStyle: {
+                backgroundColor: headerColor,
+              },
+            }}
+          />
+          <Stack.Screen
+            name="DataManagement"
+            options={{
+              title: "Data Management",
               presentation: "transparentModal",
               headerStyle: {
                 backgroundColor: headerColor,

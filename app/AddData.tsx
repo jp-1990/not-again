@@ -15,11 +15,11 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import { ThemedText } from "@/components/ThemedText";
 import { useHeaderHeight } from "@react-navigation/elements";
 import Constants from "expo-constants";
-import { Link, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { emitCreate, SQLEntry, useDatabaseContext } from "@/providers/database";
 import { getDaysBetweenDates } from "@/utils/date";
 
-export default function Modal() {
+export default function AddData() {
   const { height } = useWindowDimensions();
   const hHeight = useHeaderHeight();
   const navigation = useNavigation();
@@ -62,7 +62,7 @@ export default function Modal() {
     date.setHours(0, 0, 0, 0);
 
     const lastEntry = await db.getFirstAsync<SQLEntry>(
-      "SELECT * FROM entries WHERE date < ? ORDER BY date DESC LIMIT 1",
+      "SELECT date FROM entries WHERE date < ? ORDER BY date DESC LIMIT 1",
       date.getTime(),
     );
 
@@ -79,7 +79,7 @@ export default function Modal() {
     );
 
     const nextEntry = await db.getFirstAsync<SQLEntry>(
-      "SELECT * FROM entries WHERE date > ? ORDER BY date ASC LIMIT 1",
+      "SELECT id, date FROM entries WHERE date > ? ORDER BY date ASC LIMIT 1",
       date.getTime(),
     );
 

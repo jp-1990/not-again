@@ -45,7 +45,8 @@
     "react-native-webview": "13.12.5",
     "victory-native": "^41.16.1",
     "expo-document-picker": "~13.0.3",
-    "expo-file-system": "~18.0.10"
+    "expo-file-system": "~18.0.10",
+    "expo-checkbox": "~4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

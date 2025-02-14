@@ -66,7 +66,7 @@ export default function Next() {
 
       <Link
         asChild
-        href="/modal"
+        href="/AddData"
         style={[
           { borderColor: iconColor, backgroundColor: iconBackground },
           styles.button,
