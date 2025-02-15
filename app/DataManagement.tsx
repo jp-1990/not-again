@@ -223,18 +223,20 @@ export default function DataManagement() {
             <ThemedText colorName="primaryButtonText">Download</ThemedText>
           </View>
         </Button>
-        <ThemedText>Get your data as a .csv file</ThemedText>
+        <ThemedText colorName="nextText">
+          Get your data as a .csv file
+        </ThemedText>
       </View>
 
       <ThemedView style={styles.divider} colorName="divider" />
 
-      <ThemedText>
+      <ThemedText colorName="nextText">
         Do you already have some data you'd like to import?
       </ThemedText>
 
       <View style={styles.importContainer}>
         <View style={styles.importContainerText}>
-          <ThemedText>
+          <ThemedText colorName="nextText">
             We need a .csv file with the following columns:
           </ThemedText>
           <ThemedText>date | notes</ThemedText>
@@ -264,7 +266,9 @@ export default function DataManagement() {
       {data.length ? (
         <>
           <View style={styles.previewContainer}>
-            <ThemedText>Preview (top 5 rows)</ThemedText>
+            <ThemedText colorName="nextText" style={{ marginBottom: 4 }}>
+              Preview (top 5 rows)
+            </ThemedText>
             <View style={styles.previewTable}>
               <ThemedView
                 style={[
@@ -272,11 +276,11 @@ export default function DataManagement() {
                   styles.previewTableRow,
                 ]}
               >
-                <View style={{ flex: 1, paddingVertical: 4 }}>
-                  <ThemedText>Date</ThemedText>
+                <View style={{ width: 86, paddingVertical: 4 }}>
+                  <ThemedText colorName="primaryButtonText">Date</ThemedText>
                 </View>
-                <View style={{ flex: 3, paddingVertical: 4 }}>
-                  <ThemedText>Notes</ThemedText>
+                <View style={{ flex: 1, paddingVertical: 4 }}>
+                  <ThemedText colorName="primaryButtonText">Notes</ThemedText>
                 </View>
               </ThemedView>
 
@@ -288,13 +292,13 @@ export default function DataManagement() {
                     key={d.date}
                     style={[{ backgroundColor }, styles.previewTableRow]}
                   >
-                    <View style={{ flex: 1 }}>
-                      <ThemedText>
+                    <View style={{ width: 86, paddingVertical: 4 }}>
+                      <ThemedText colorName="nextText">
                         {new Date(+d.date).toLocaleDateString()}
                       </ThemedText>
                     </View>
-                    <View style={{ flex: 3 }}>
-                      <ThemedText>{d.notes}</ThemedText>
+                    <View style={{ flex: 1, paddingVertical: 4 }}>
+                      <ThemedText colorName="nextText">{d.notes}</ThemedText>
                     </View>
                   </ThemedView>
                 );
@@ -302,7 +306,7 @@ export default function DataManagement() {
             </View>
           </View>
 
-          <ThemedText>
+          <ThemedText style={{ marginTop: 4 }} colorName="nextText">
             *We assume each date is the start of your period
           </ThemedText>
 
@@ -316,7 +320,6 @@ export default function DataManagement() {
                   flex: 2,
                   borderColor: primaryButtonBackground,
                 },
-                styles.actionsContainerButton,
               ]}
             >
               <ThemedText colorName="primaryButtonBackground">
@@ -331,7 +334,6 @@ export default function DataManagement() {
                   backgroundColor: primaryButtonBackground,
                   borderColor: primaryButtonBackground,
                 },
-                styles.actionsContainerButton,
               ]}
             >
               <ThemedText colorName="primaryButtonText">
@@ -350,10 +352,6 @@ const styles = StyleSheet.create({
     display: "flex",
     padding: 16,
   },
-  header: {
-    height: Constants.statusBarHeight,
-    width: "100%",
-  },
   titleText: {
     fontSize: 36,
     lineHeight: 36 * 1.2,
@@ -364,6 +362,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 16,
+    margin: 8,
   },
   downloadContainerButton: {
     width: 130,
@@ -408,5 +407,4 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 16,
   },
-  actionsContainerButton: {},
 });

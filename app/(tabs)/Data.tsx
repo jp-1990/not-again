@@ -14,13 +14,7 @@ import Checkbox from "expo-checkbox";
 import Constants from "expo-constants";
 import { Link } from "expo-router";
 import React from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  ToastAndroid,
-} from "react-native";
+import { View, StyleSheet, ScrollView, ToastAndroid } from "react-native";
 
 type Index = number;
 
@@ -30,7 +24,6 @@ export default function Data() {
 
   const [updated, setUpdated] = React.useState(false);
   const [selected, setSelected] = React.useState<[Index, SQLEntry][]>([]);
-  const [selectionMode, setSelectionMode] = React.useState(false);
 
   React.useEffect(() => {
     const unsub = listenCreate(() => {
@@ -78,6 +71,11 @@ export default function Data() {
     "primaryButtonText",
   );
 
+  const checkboxColor = useThemeColor(
+    { light: undefined, dark: undefined },
+    "checkboxColor",
+  );
+
   function toggleAllSelected(checked: boolean) {
     if (checked) {
       return setSelected(data.map((d, i) => [i, d]));
@@ -86,6 +84,8 @@ export default function Data() {
   }
 
   async function deleteSelected() {
+    if (!selected.length) return;
+
     const selectedSorted = selected.sort((a, b) => {
       return a[0] - b[0];
     });
@@ -149,7 +149,9 @@ export default function Data() {
     <ThemedView style={styles.view} colorName="background">
       <ThemedView style={styles.header} colorName="header" />
       <View style={styles.headerContainer}>
-        <ThemedText style={styles.titleText}>Data Management</ThemedText>
+        <ThemedText colorName="nextText" style={styles.titleText}>
+          Data Management
+        </ThemedText>
         <View style={styles.downloadContainer}>
           <Link href="/DataManagement" asChild>
             <Button
@@ -177,7 +179,9 @@ export default function Data() {
               </View>
             </Button>
           </Link>
-          <ThemedText>Upload or download your data</ThemedText>
+          <ThemedText colorName="nextText">
+            Upload or download your data
+          </ThemedText>
         </View>
       </View>
       <ThemedView
@@ -191,13 +195,11 @@ export default function Data() {
           styles.dataTableRow,
         ]}
       >
-        {selectionMode && (
-          <Checkbox
-            value={!!selected.length}
-            onValueChange={toggleAllSelected}
-            color={tableRowDark}
-          />
-        )}
+        <Checkbox
+          value={!!selected.length}
+          onValueChange={toggleAllSelected}
+          color={tableRowDark}
+        />
         <View style={{ width: 86, paddingVertical: 4 }}>
           <ThemedText colorName="primaryButtonText">Date</ThemedText>
         </View>
@@ -208,28 +210,22 @@ export default function Data() {
           <ThemedText colorName="primaryButtonText">Notes</ThemedText>
         </View>
       </ThemedView>
-      {selectionMode && (
-        <View style={styles.dataTableActionsOverlay}>
-          <Button
-            onPress={deleteSelected}
-            buttonStyle={[
-              {
-                backgroundColor: primaryButtonBackground,
-                borderColor: primaryButtonBackground,
-              },
-              styles.downloadContainerButton,
-            ]}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <MaterialIcons
-                name="delete"
-                size={26}
-                color={primaryButtonText}
-              />
-            </View>
-          </Button>
-        </View>
-      )}
+      <View style={styles.dataTableActionsOverlay}>
+        <Button
+          onPress={deleteSelected}
+          buttonStyle={[
+            {
+              backgroundColor: primaryButtonBackground,
+              borderColor: primaryButtonBackground,
+            },
+            styles.downloadContainerButton,
+          ]}
+        >
+          <View style={{ flexDirection: "row" }}>
+            <MaterialIcons name="delete" size={26} color={primaryButtonText} />
+          </View>
+        </Button>
+      </View>
       <ScrollView style={styles.dataContainer}>
         <View style={styles.dataTable}>
           {data.map((d, i) => {
@@ -249,28 +245,24 @@ export default function Data() {
                 key={i}
                 style={[{ backgroundColor }, styles.dataTableRowContainer]}
               >
-                <Pressable onLongPress={() => setSelectionMode((p) => !p)}>
-                  <View style={styles.dataTableRow}>
-                    {selectionMode && (
-                      <Checkbox
-                        value={!!selected.find((e) => e[1].id === d.id)}
-                        onValueChange={onCheckboxChange}
-                        color={tableHeader}
-                      />
-                    )}
-                    <View style={{ width: 86, paddingVertical: 4 }}>
-                      <ThemedText>
-                        {new Date(+d.date).toLocaleDateString()}
-                      </ThemedText>
-                    </View>
-                    <View style={{ width: 48, paddingVertical: 4 }}>
-                      <ThemedText>{d.cycle}</ThemedText>
-                    </View>
-                    <View style={{ flex: 1, paddingVertical: 4 }}>
-                      <ThemedText>{d.notes}</ThemedText>
-                    </View>
+                <View style={styles.dataTableRow}>
+                  <Checkbox
+                    value={!!selected.find((e) => e[1].id === d.id)}
+                    onValueChange={onCheckboxChange}
+                    color={checkboxColor}
+                  />
+                  <View style={{ width: 86, paddingVertical: 4 }}>
+                    <ThemedText colorName="nextText">
+                      {new Date(+d.date).toLocaleDateString()}
+                    </ThemedText>
                   </View>
-                </Pressable>
+                  <View style={{ width: 48, paddingVertical: 4 }}>
+                    <ThemedText colorName="nextText">{d.cycle}</ThemedText>
+                  </View>
+                  <View style={{ flex: 1, paddingVertical: 4 }}>
+                    <ThemedText colorName="nextText">{d.notes}</ThemedText>
+                  </View>
+                </View>
               </ThemedView>
             );
           })}

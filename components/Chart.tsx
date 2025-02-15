@@ -69,7 +69,7 @@ export default function Chart() {
     <ThemedView style={[{ borderColor: border }, styles.view]}>
       <ThemedView style={styles.header} colorName="chartHeader">
         {!loading && (
-          <ThemedText>
+          <ThemedText colorName="nextText">
             Cycle Durations ({`${new Date(startDate).toLocaleDateString()}`} -{" "}
             {`${new Date(endDate).toLocaleDateString()}`})
           </ThemedText>

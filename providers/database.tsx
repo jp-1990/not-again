@@ -37,7 +37,6 @@ async function migrateDbIfNeeded(db: SQLiteDatabase) {
   let res = await db.getFirstAsync<{
     user_version: number;
   }>("PRAGMA user_version");
-  console.log("db version", res);
   if (!res) {
     throw new Error("failed to get db version");
   }

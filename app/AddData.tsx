@@ -18,6 +18,7 @@ import Constants from "expo-constants";
 import { useNavigation } from "expo-router";
 import { emitCreate, SQLEntry, useDatabaseContext } from "@/providers/database";
 import { getDaysBetweenDates } from "@/utils/date";
+import Button from "@/components/Button";
 
 export default function AddData() {
   const { height } = useWindowDimensions();
@@ -43,6 +44,11 @@ export default function AddData() {
   const iconColor = useThemeColor(
     { light: undefined, dark: undefined },
     "inputBorder",
+  );
+
+  const primaryButtonBackground = useThemeColor(
+    { light: undefined, dark: undefined },
+    "primaryButtonBackground",
   );
 
   function onChange(_event: DateTimePickerEvent, selectedDate?: Date) {
@@ -107,17 +113,26 @@ export default function AddData() {
       ]}
       colorName="nextBackground"
     >
+      <ThemedText colorName="nextText">
+        This date represents the start of your cycle. You can choose to add some
+        notes to help track anything out of the ordinary.
+      </ThemedText>
       <Pressable style={styles.dateInputContainer} onPressOut={showDatepicker}>
-        <ThemedText
-          style={[
-            { borderColor: inputBorder, backgroundColor: inputBackground },
-            styles.dateInput,
-          ]}
-        >
-          {date.toLocaleDateString()}
-        </ThemedText>
+        <View>
+          <ThemedText colorName="nextText" style={styles.inputLabel}>
+            Date
+          </ThemedText>
+          <ThemedText
+            style={[
+              { borderColor: inputBorder, backgroundColor: inputBackground },
+              styles.dateInput,
+            ]}
+          >
+            {date.toLocaleDateString()}
+          </ThemedText>
+        </View>
         <View style={styles.dateIcon}>
-          <IconSymbol name="calendar" size={56} color={iconColor} />
+          <IconSymbol name="calendar" size={64} color={iconColor} />
         </View>
       </Pressable>
       {show && (
@@ -125,7 +140,9 @@ export default function AddData() {
       )}
 
       <View style={styles.notesInputContainer}>
-        <ThemedText>Notes</ThemedText>
+        <ThemedText colorName="nextText" style={styles.inputLabel}>
+          Notes
+        </ThemedText>
         <TextInput
           ref={notesRef}
           editable
@@ -140,23 +157,20 @@ export default function AddData() {
         />
       </View>
       <View style={styles.spacer} />
-      <ThemedView
-        style={styles.submitButtonContainer}
-        colorName="submitButtonBackground"
-      >
-        <Pressable
-          style={styles.submitButton}
+      <View style={styles.submitButtonContainer}>
+        <Button
           onPressOut={onSubmit}
-          android_ripple={{
-            color: "rgba(255,255,255,0.3)",
-            borderless: false,
-          }}
+          buttonStyle={[
+            {
+              backgroundColor: primaryButtonBackground,
+              borderColor: primaryButtonBackground,
+              width: "100%",
+            },
+          ]}
         >
-          <ThemedText type="subtitle" colorName="submitButtonText">
-            Submit
-          </ThemedText>
-        </Pressable>
-      </ThemedView>
+          <ThemedText colorName="primaryButtonText">Submit</ThemedText>
+        </Button>
+      </View>
     </ThemedView>
   );
 }
@@ -166,29 +180,33 @@ const styles = StyleSheet.create({
     display: "flex",
     padding: 16,
   },
+  inputLabel: {
+    marginLeft: 4,
+    fontSize: 14,
+    lineHeight: 14 * 1.2,
+  },
   dateInputContainer: {
     width: "100%",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
+    marginTop: 8,
   },
   dateInput: {
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    fontSize: 20,
-    lineHeight: 24 * 1.3,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     marginRight: 8,
   },
   dateIcon: {
-    marginBottom: 4,
+    marginBottom: -2,
   },
   notesInputContainer: {
     width: "100%",
     height: 204,
-    marginTop: -12,
+    marginTop: -4,
   },
   notesInput: {
     flex: 1,
@@ -197,21 +215,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: 4,
     paddingHorizontal: 12,
-    fontSize: 16,
   },
   spacer: {
     flex: 1,
   },
   submitButtonContainer: {
-    display: "flex",
     borderRadius: 8,
-  },
-  submitButton: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 56,
-    width: "100%",
   },
 });

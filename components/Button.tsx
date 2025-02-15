@@ -71,7 +71,7 @@ export default React.forwardRef(function Button(
         ...(Array.isArray(buttonStyle) ? buttonStyle : [buttonStyle]),
       ]}
     >
-      <View>
+      <View style={styles.childContainer}>
         {Platform.OS === "ios" && (
           <Animated.View
             style={[
@@ -104,5 +104,10 @@ const styles = StyleSheet.create({
     height: 48,
     backgroundColor: "white",
     borderRadius: 50,
+  },
+  childContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

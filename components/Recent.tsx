@@ -12,7 +12,6 @@ import {
 export default function Recent() {
   const db = useDatabaseContext();
   const [updated, setUpdated] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
   const [entries, setEntries] = React.useState<SQLEntries>([]);
 
   React.useEffect(() => {
@@ -27,12 +26,10 @@ export default function Recent() {
 
   React.useEffect(() => {
     async function getEntries() {
-      setLoading(true);
       const data = await db.getAllAsync<SQLEntry>(
-        "SELECT * FROM entries ORDER BY date DESC LIMIT 8",
+        "SELECT date, cycle FROM entries ORDER BY date DESC LIMIT 8",
       );
       setEntries(data);
-      setLoading(false);
     }
 
     getEntries();

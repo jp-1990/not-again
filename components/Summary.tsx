@@ -13,7 +13,6 @@ import { getDaysBetweenDates } from "@/utils/date";
 export default function Summary() {
   const db = useDatabaseContext();
   const [updated, setUpdated] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([
     {
       label: "Last recorded period:",
@@ -23,7 +22,7 @@ export default function Summary() {
       label: "Current day of cycle:",
       value: "",
     },
-    { label: "Current cycle phase:", value: "Lutea" },
+    { label: "Current cycle phase:", value: "" },
     { label: "Average cycle duration:", value: "" },
     {
       label: "Last estimated ovulation:",
@@ -61,8 +60,6 @@ export default function Summary() {
 
   React.useEffect(() => {
     async function getEntries() {
-      setLoading(true);
-
       const [entry, avgCycle, stddev] = await Promise.all([
         db.getFirstAsync<SQLEntry>(
           "SELECT * FROM entries ORDER BY date DESC LIMIT 1",
@@ -75,13 +72,36 @@ export default function Summary() {
         ),
       ]);
 
-      if (!entry || !avgCycle || !stddev) return;
+      if (!entry || !avgCycle || !stddev) {
+        setData([
+          {
+            label: "Last recorded period:",
+            value: "",
+          },
+          { label: "Average cycle duration:", value: "" },
+          {
+            label: "Current day of cycle:",
+            value: "",
+          },
+          { label: "Estimated cycle phase:", value: "" },
+          // {
+          //   label: "Last estimated ovulation:",
+          //   value: "",
+          // },
+          // {
+          //   label: "Next estimated ovulation:",
+          //   value: "",
+          // },
+          { label: "Cycle Standard Deviation:", value: "" },
+        ]);
+        return;
+      }
 
-      const prevOv = new Date(entry.date);
-      prevOv.setDate(prevOv.getDate() - (entry.cycle ?? 28) / 2);
-
-      const nextOv = new Date(entry.date);
-      nextOv.setDate(nextOv.getDate() + (entry.cycle ?? 28) / 2);
+      // const prevOv = new Date(entry.date);
+      // prevOv.setDate(prevOv.getDate() - (entry.cycle ?? 28) / 2);
+      //
+      // const nextOv = new Date(entry.date);
+      // nextOv.setDate(nextOv.getDate() + (entry.cycle ?? 28) / 2);
 
       const currentDayOfCycle = getDaysBetweenDates(
         new Date(),
@@ -98,29 +118,29 @@ export default function Summary() {
           value: `${new Date(entry.date).toDateString()} (${currentDayOfCycle} day${currentDayOfCycle === 1 ? "" : "s"} ago)`,
         },
         {
-          label: "Current day of cycle:",
-          value: `Day ${currentDayOfCycle}`,
-        },
-        { label: "Current cycle phase:", value: phase },
-        {
           label: "Average cycle duration:",
           value: `${Math.ceil(avgCycle.avgCycle) ? `${Math.ceil(avgCycle.avgCycle)} day${avgCycle.avgCycle === 1 ? "" : "s"}` : "-"}`,
         },
         {
-          label: "Last estimated ovulation:",
-          value: `${prevOv.toDateString()} (${getDaysBetweenDates(new Date(), prevOv)} day${getDaysBetweenDates(new Date(), prevOv) === 1 ? "" : "s"} ago)`,
+          label: "Current day of cycle:",
+          value: `Day ${currentDayOfCycle}`,
         },
-        {
-          label: "Next estimated ovulation:",
-          value: `${nextOv.toDateString()} (${getDaysBetweenDates(new Date(), nextOv)} day${getDaysBetweenDates(new Date(), nextOv) === 1 ? "" : "s"} away)`,
-        },
+        { label: "Estimated cycle phase:", value: phase },
+        // {
+        //   // todo: abs value is messing this up
+        //   label: "Last estimated ovulation:",
+        //   value: `${prevOv.toDateString()} (${getDaysBetweenDates(new Date(), prevOv)} day${getDaysBetweenDates(new Date(), prevOv) === 1 ? "" : "s"} ago)`,
+        // },
+        // {
+        //   // todo: abs value is messing this up
+        //   label: "Next estimated ovulation:",
+        //   value: `${nextOv.toDateString()} (${getDaysBetweenDates(new Date(), nextOv)} day${getDaysBetweenDates(new Date(), nextOv) === 1 ? "" : "s"} away)`,
+        // },
         {
           label: "Cycle Standard Deviation:",
           value: `${Math.sqrt(stddev.stddev).toFixed(2) !== "0.00" ? `${Math.sqrt(stddev.stddev).toFixed(2)}` : "-"}`,
         },
       ]);
-
-      setLoading(false);
     }
 
     getEntries();

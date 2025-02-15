@@ -12,8 +12,78 @@ import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import {
+  listenCreate,
+  SQLEntry,
+  useDatabaseContext,
+} from "@/providers/database";
 
 export default function Next() {
+  const db = useDatabaseContext();
+  const [updated, setUpdated] = React.useState(false);
+  const [nextDate, setNextDate] = React.useState<{
+    date: Date;
+    days: number;
+  }>();
+
+  React.useEffect(() => {
+    const unsub = listenCreate(() => {
+      setUpdated((prev) => !prev);
+    });
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    async function getEntries() {
+      const data = await db.getAllAsync<SQLEntry>(
+        "SELECT date, cycle FROM entries ORDER BY date DESC",
+      );
+
+      if (!data.length || data.length === 1) {
+        setNextDate(undefined);
+        return;
+      }
+
+      let high = 28;
+      let low = 28;
+      let total = 0;
+      let dataPoints = 0;
+      for (let i = 0; i < data.length; i++) {
+        const cycle = data[i].cycle ?? 0;
+        if (cycle > high && cycle < high + 10) {
+          high = cycle;
+        }
+        if (cycle < low && cycle > low - 10) {
+          low = cycle;
+        }
+
+        if (cycle < high + 10 && cycle > low - 10) {
+          total += cycle;
+          dataPoints++;
+        }
+      }
+
+      const avgCycle = Math.floor(total / dataPoints);
+      const expectedDate = new Date(data[0].date);
+      expectedDate.setDate(expectedDate.getDate() + avgCycle);
+      expectedDate.setHours(0, 0, 0, 0);
+      const now = new Date();
+
+      const utcA = expectedDate.getTime();
+      const utcB = now.setHours(0, 0, 0, 0);
+
+      const differenceInMs = utcA - utcB;
+      const expectedDays = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
+
+      setNextDate({ date: expectedDate, days: expectedDays });
+    }
+
+    getEntries();
+  }, [updated]);
+
   const iconColor = useThemeColor(
     { light: undefined, dark: undefined },
     "addIcon",
@@ -51,14 +121,22 @@ export default function Next() {
     <ThemedView style={styles.view}>
       <ThemedView style={[{ borderColor: iconBackground }, styles.content]}>
         <ThemedView style={styles.header} colorName="nextHeader">
-          <ThemedText>NEXT PERIOD: Tue Sept 26 2022</ThemedText>
+          <ThemedText colorName="nextText">
+            NEXT PERIOD: {nextDate?.date.toDateString() ?? "-"}
+          </ThemedText>
         </ThemedView>
         <ThemedView style={styles.text} colorName="nextBackground">
           <View style={styles.textNumberContainer}>
-            <ThemedText style={styles.textNumber}>7</ThemedText>
+            <ThemedText colorName="nextText" style={styles.textNumber}>
+              {nextDate?.days ?? "?"}
+            </ThemedText>
             <View style={styles.textNumberTextContainer}>
-              <ThemedText style={styles.textNumberText}>Days</ThemedText>
-              <ThemedText style={styles.textNumberText}>Away</ThemedText>
+              <ThemedText colorName="nextText" style={styles.textNumberText}>
+                Days
+              </ThemedText>
+              <ThemedText colorName="nextText" style={styles.textNumberText}>
+                Away
+              </ThemedText>
             </View>
           </View>
         </ThemedView>
